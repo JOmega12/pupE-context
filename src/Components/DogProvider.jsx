@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { addDogToDb } from "../fetch/add-dog";
 import { deleteDogFromDb } from "../fetch/delete-dog-from-db";
 import { updateFavoriteForDog } from "../fetch/update-favorite";
+import { getAllDogs } from "../fetch/fetch-all";
 
 export const DogContext = createContext({});
 
@@ -10,9 +11,7 @@ export const DogProvider = ({ children }) => {
   const [dogs, setDogs] = useState([]);
 
   const refetchDogs = () => {
-    fetch("http://localhost:3000/dogs")
-      .then((response) => response.json())
-      .then(setDogs);
+    getAllDogs().then(setDogs);
   };
 
   const addDog = (dog) => {
@@ -56,28 +55,12 @@ export const DogProvider = ({ children }) => {
     return dogs;
   })();
 
-  const onClickFavorited = () => {
-    if (showComponent === "favorite-dogs") {
+  const handleOnClick = (name) => {
+    if (showComponent === name) {
       setShowComponent("all-dogs");
       return;
     }
-    setShowComponent("favorite-dogs");
-  };
-
-  const onClickUnfavorited = () => {
-    if (showComponent === "unfavorite-dogs") {
-      setShowComponent("all-dogs");
-      return;
-    }
-    setShowComponent("unfavorite-dogs");
-  };
-
-  const onClickCreateDog = () => {
-    if (showComponent === "create-dog-form") {
-      setShowComponent("all-dogs");
-      return;
-    }
-    setShowComponent("create-dog-form");
+    setShowComponent(name);
   };
 
   useEffect(() => {
@@ -90,9 +73,7 @@ export const DogProvider = ({ children }) => {
     <DogContext.Provider
       value={{
         showComponent,
-        onClickFavorited,
-        onClickUnfavorited,
-        onClickCreateDog,
+        handleOnClick,
         favoriteDogCount,
         unfavoriteDogCount,
         filteredDogs,
@@ -101,7 +82,6 @@ export const DogProvider = ({ children }) => {
         favoriteDog,
         dogs,
         addDog,
-        
       }}
     >
       {children}

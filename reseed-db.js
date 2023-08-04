@@ -26,3 +26,7 @@ const db = {
 };
 
 writeFileSync("db.json", JSON.stringify(db), { encoding: "utf-8" });
+
+
+//in the writeFileSync(file, data[, options])
+//he put the writeFileSync to be able to 

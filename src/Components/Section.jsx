@@ -1,4 +1,3 @@
-
 import { useDog } from "./DogProvider";
 
 //! Get rid of all props except 'children' and 'label'
@@ -6,47 +5,36 @@ export const Section = ({
   label, // do not delete
   children, // do not delete
 }) => {
-  const {
-    onClickFavorited,
-    onClickUnfavorited,
-    onClickCreateDog,
-    showComponent,
-    favoriteDogCount,
-    unfavoriteDogCount,
-  } = useDog();
+  const { handleOnClick, showComponent, favoriteDogCount, unfavoriteDogCount } =
+    useDog();
+
+  const data = [
+    { name: "favorite-dogs", label: "favorited", counter: favoriteDogCount },
+    {
+      name: "unfavorite-dogs",
+      label: "unfavorited",
+      counter: unfavoriteDogCount,
+    },
+    { name: "create-dog-form", label: "create dog" },
+  ];
 
   return (
     <section>
       <div className="container-header">
         <div className="container-label">{label}</div>
         <div className="selectors">
-          {/* This should display the favorited count */}
-          <div
-            className={`selector ${
-              showComponent === "favorite-dogs" && "active"
-            }`}
-            onClick={onClickFavorited}
-          >
-            favorited ( {favoriteDogCount} )
-          </div>
-
-          {/* This should display the unfavorited count */}
-          <div
-            className={`selector ${
-              showComponent === "unfavorite-dogs" && "active"
-            }`}
-            onClick={onClickUnfavorited}
-          >
-            unfavorited ( {unfavoriteDogCount} )
-          </div>
-          <div
-            className={`selector ${
-              showComponent === "create-dog-form" && "active"
-            }`}
-            onClick={onClickCreateDog}
-          >
-            create dog
-          </div>
+          {data.map((item) => {
+            const { name, label, counter } = item;
+            return (
+              <div
+                key={item.name}
+                className={`selector ${showComponent === name && "active"}`}
+                onClick={() => handleOnClick(name)}
+              >
+                {label} {counter && `(${counter})`}
+              </div>
+            );
+          })}
         </div>
       </div>
       {children}
